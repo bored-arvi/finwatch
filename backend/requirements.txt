@@ -1,0 +1,15 @@
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+pydantic==2.7.1
+
+numpy==1.26.4
+opencv-python==4.6.0.66
+paddlepaddle==2.6.2
+paddleocr==2.7.0.3
+
+torch==2.1.2
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+openai-whisper
+requests==2.31.0
