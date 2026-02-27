@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg:      #080a0d;
+  --s1:      #0e1217;
+  --s2:      #151b22;
+  --s3:      #1c242e;
+  --border:  #222d3a;
+  --green:   #00e676;
+  --red:     #ff3356;
+  --amber:   #ffb300;
+  --blue:    #4488ff;
+  --text:    #d8e4f0;
+  --muted:   #4a5f72;
+  --mono:    'IBM Plex Mono', monospace;
+  --display: 'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--display);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,230,118,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,230,118,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Top glow */
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: .4; pointer-events: none; z-index: 200;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: var(--mono); }
+
+/* Animations */
+@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.2} }
+@keyframes spin    { to{transform:rotate(360deg)} }
+@keyframes fadeUp  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+@keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
