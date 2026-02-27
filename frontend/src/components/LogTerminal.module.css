@@ -1,0 +1,12 @@
+.term {
+  background: #020406; border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 14px; font-family: var(--mono); font-size: 10px; line-height: 1.9;
+  max-height: 140px; overflow-y: auto; color: #334455;
+}
+.line { display: block; }
+.ts   { color: #1a2a36; }
+.info { color: #0a6a48; }
+.warn { color: #7a5800; }
+.err  { color: #7a1828; }
+.msg  { color: #4a7060; }
+.cursor { animation: blink .9s step-end infinite; color: #4a7060; }
