@@ -2,7 +2,8 @@ import { useState, useRef } from 'react'
 import styles from './UploadPanel.module.css'
 
 const MODES = [
-  { id: 'image', label: 'Image', icon: '🖼', accept: 'image/*',       hint: 'PNG, JPG, WEBP' },
+  { id: 'image', label: 'Image', icon: '🖼', accept: 'image/*',                hint: 'PNG, JPG, WEBP' },
+  { id: 'video', label: 'Video', icon: '🎬', accept: 'video/*,.mp4,.mov',      hint: 'MP4, MOV — max 3s'  },
   { id: 'audio', label: 'Audio', icon: '🎙', accept: 'audio/*,.wav',  hint: 'WAV, MP3, OGG'  },
   { id: 'text',  label: 'Text',  icon: '📄', accept: null,            hint: 'Paste any text'  },
 ]

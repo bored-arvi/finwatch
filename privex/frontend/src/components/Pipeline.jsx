@@ -4,11 +4,12 @@ const STEPS = [
   { id: 'upload',   icon: '⬆', label: 'Upload'   },
   { id: 'detect',   icon: '⬡', label: 'Detect'   },
   { id: 'classify', icon: '◈', label: 'Classify'  },
+  { id: 'review',   icon: '👁', label: 'Review'   },
   { id: 'redact',   icon: '▣', label: 'Redact'    },
   { id: 'done',     icon: '✓', label: 'Done'      },
 ]
 
-const ORDER = ['upload','detect','classify','redact','done']
+const ORDER = ['upload','detect','classify','review','redact','done']
 
 function stepState(id, currentStage) {
   if (!currentStage || currentStage === 'error') return 'idle'

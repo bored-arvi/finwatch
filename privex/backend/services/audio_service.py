@@ -5,7 +5,7 @@ Your exact Whisper + LLM + ffmpeg muting logic, wrapped to return structured dat
 
 import re, subprocess, shutil
 import whisper as _whisper
-from services.llm_service import get_all_sensitive_values
+from services.llm_service import classify_audio_transcript
 
 _whisper_model = None
 
@@ -93,7 +93,28 @@ def redact_audio_file(input_path: str, output_path: str) -> dict:
         for w in seg.get("words", [])
     ]
 
-    sensitive_values, entities, is_sensitive = get_all_sensitive_values(transcript)
+    # LLM gets the full transcript — handles spelled-out dates, formatted phones, names
+    sensitive_values = classify_audio_transcript(transcript)
+
+    # Regex fallback for anything LLM missed (pure numeric patterns)
+    import re as _re
+    regex_patterns = [
+        r"\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b",   # 987-654-3210
+        r"\b\d{10}\b",                           # 9876543210
+        r"\b\d{12,16}\b",                        # account/card numbers
+        r"\b\d{2}/\d{2}/\d{4}\b",               # 07/01/1973
+    ]
+    for pattern in regex_patterns:
+        for m in _re.finditer(pattern, transcript):
+            val = m.group().strip()
+            if val not in sensitive_values:
+                sensitive_values.append(val)
+
+    sensitive_values = [v.strip() for v in sensitive_values if v and v.strip()]
+    print(f"[AUDIO] Final sensitive values: {sensitive_values}")
+
+    entities = [{"text": v, "source": "llm+audio"} for v in sensitive_values]
+    is_sensitive = len(sensitive_values) > 0
 
     mutes  = find_mute_ranges(words, sensitive_values)
     merged = merge_intervals(mutes)

@@ -121,6 +121,36 @@ export default function ResultsPanel({ result, stage }) {
           </div>
         )}
 
+        {/* Video-specific info */}
+        {result?.mode === 'video' && (
+          <div className={styles.section}>
+            <div className={styles.sectionLabel}>VIDEO INFO</div>
+            <div className={styles.stats}>
+              <div className={styles.stat}>
+                <span style={{ color: 'var(--blue)' }}>{result.frames_processed ?? 0}</span><br/>Frames
+              </div>
+              <div className={styles.stat}>
+                <span style={{ color: 'var(--blue)' }}>{result.duration_seconds ?? 0}s</span><br/>Duration
+              </div>
+              <div className={styles.stat}>
+                <span style={{ color: 'var(--green)' }}>{result.face_detections ?? 0}</span><br/>Face Hits
+              </div>
+              <div className={styles.stat}>
+                <span style={{ color: result.sensitive_values?.length > 0 ? 'var(--red)' : 'var(--green)' }}>
+                  {result.sensitive_values?.length ?? 0}
+                </span><br/>Text PII
+              </div>
+            </div>
+            {result.sensitive_values?.length > 0 && (
+              <div className={styles.muteList}>
+                {result.sensitive_values.map((v, i) => (
+                  <span key={i} className={styles.muteTag} style={{ borderColor: 'var(--red)' }}>🔴 {v}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* OCR text */}
         {result?.ocr_text && (
           <div className={styles.section}>
@@ -148,9 +178,9 @@ export default function ResultsPanel({ result, stage }) {
 
         {/* Stats row */}
         <div className={styles.stats}>
-          <div className={styles.stat}><span style={{ color: 'var(--red)'   }}>{result?.face_count ?? 0}</span><br/>Faces</div>
+          <div className={styles.stat}><span style={{ color: 'var(--red)'   }}>{result?.face_count ?? result?.face_detections ?? 0}</span><br/>Faces</div>
           <div className={styles.stat}><span style={{ color: 'var(--amber)' }}>{result?.text_redacted ?? result?.entity_count ?? 0}</span><br/>Text PII</div>
-          <div className={styles.stat}><span style={{ color: 'var(--blue)'  }}>{result?.muted_count ?? 0}</span><br/>Audio Mutes</div>
+          <div className={styles.stat}><span style={{ color: 'var(--blue)'  }}>{result?.muted_count ?? result?.muted_segments?.length ?? 0}</span><br/>Audio Mutes</div>
           <div className={styles.stat}><span style={{ color: isSensitive ? 'var(--red)' : 'var(--green)' }}>{isSensitive ? 'HIGH' : 'LOW'}</span><br/>Risk</div>
         </div>
 

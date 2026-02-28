@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { scanImage, scanAudio, scanText } from '../api/client'
+import { scanImage, scanAudio, scanText, scanVideo } from '../api/client'
 
 const STAGES = ['upload', 'detect', 'classify', 'redact', 'done']
 
@@ -36,6 +36,9 @@ export function useScan() {
         resp = await scanImage(payload, p => setProgress(p))
       } else if (mode === 'audio') {
         resp = await scanAudio(payload, p => setProgress(p))
+      } else if (mode === 'video') {
+        addLog('info', 'Processing video — this may take 30-60 seconds...')
+        resp = await scanVideo(payload, p => setProgress(p))
       } else {
         resp = await scanText(payload)
       }
