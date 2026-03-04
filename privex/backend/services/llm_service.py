@@ -15,7 +15,7 @@ OLLAMA_MODEL = "llama3"
 # Can be set via env var at startup OR patched at runtime via /config/llm
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 # gemini-2.5-flash uses v1beta endpoint
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent"
 
 def _use_gemini() -> bool:
     return bool(GEMINI_API_KEY)
@@ -174,6 +174,10 @@ CRITICAL RULES:
 - If the document contains words like LICENSE, DL, CDL, PASSPORT, AADHAAR, PAN → treat printed personal fields as sensitive.
 - On ID cards, printed name and address are ALWAYS sensitive.
 - Extract values exactly as they appear. Do not normalize spacing.
+- Government IDs often start with letters followed by numbers e.g. "1D123456789", "D123456789" — always extract these.
+- Extract the FULL name, not just the last name. If you see "MOTORIST HD MORGAN" extract all three words together as one entity.
+- Do NOT split names into parts — return the complete name string as one entity.
+- License/ID numbers may be prefixed with letters — extract the full alphanumeric string.
 
 Return ONLY valid JSON:
 {
@@ -310,6 +314,8 @@ CANDIDATE_PATTERNS = [
     (r"[A-Z]{5}[0-9]{4}[A-Z]",                        "PAN-like"),
     (r"[2-9][0-9]{11}",                                "Aadhaar-like"),
     (r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", "email"),
+    (r"\b[A-Z0-9]{2}[0-9]{6,}\b",  "alphanumeric ID"),   # catches 1D123456789, AB1234567
+    (r"\b[A-Z]{1,2}[0-9]{7,}\b",   "license ID"),   
 ]
 
 def extract_candidates_with_context(text: str, window: int = 60) -> list:
